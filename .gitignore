@@ -1,0 +1,12 @@
+# build files
+elm-stuff/
+elm.js
+node_modules/
+tmp/
+s3_ready_app/
+sample-data/
+
+# Mac files
+.DS_Store
+.idea/
+*.iml
