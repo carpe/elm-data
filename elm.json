@@ -7,6 +7,8 @@
     "exposed-modules": [
         "ElmData.DAO",
         "ElmData.Resource",
+        "ElmData.ListResource",
+        "ElmData.QueryParam",
         "ElmData.Messages",
         "ElmData.AuthConfig",
         "ElmData.Session",

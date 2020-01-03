@@ -1,4 +1,10 @@
-module ElmData.ListResource exposing (..)
+module ElmData.ListResource exposing (ListResource, ListResourceMsg(..), listResource)
+
+{-|
+    Resource allows you to make requests on behalf of a DAO, without having to think about the state of the DAO
+
+    @docs ListResource, ListResourceMsg, listResource
+-}
 
 import ElmData.DAO exposing (..)
 import ElmData.Data exposing (..)
