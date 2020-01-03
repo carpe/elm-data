@@ -2,20 +2,22 @@ module ElmData.QueryParam exposing (QueryParam, createUrl, string, int, float, b
 
 
 {-|
-    # Use to pass query params to a request made via a Resource or ListResource.
+Use to pass query params to a request made via a Resource or ListResource.
 
-    @docs string, int, float, bool
+@docs string, int, float, bool
 
-    # Actual QueryParam type
+# Actual QueryParam type
 
-    @docs QueryParam
+@docs QueryParam
 
-    # Create url from QueryParams
+# Create url from QueryParams
 
-    @docs createUrl
+@docs createUrl
 -}
 
 {-| A QueryParam
+
+@docs QueryParam
 -}
 type alias QueryParam =
     { key : String

@@ -1,9 +1,9 @@
 module ElmData.Resource exposing (Resource, ResourceMsg(..), resource)
 
 {-|
-    Resource allows you to make requests on behalf of a DAO, without having to think about the state of the DAO
+Resource allows you to make requests on behalf of a DAO, without having to think about the state of the DAO
 
-    @docs Resource, ResourceMsg, resource
+@docs Resource, ResourceMsg, resource
 -}
 
 import ElmData.DAO exposing (..)
@@ -13,7 +13,8 @@ import ElmData.Messages exposing (..)
 import ElmData.Session exposing (Session(..))
 
 
-{-| A Resource
+{-|
+A Resource that can be used to make requests that target a single record. (i.e. SHOW/CREATE/UPDATE)
 -}
 type alias Resource recordType externalMsg =
     { create : Session -> recordType -> Cmd externalMsg
@@ -21,14 +22,16 @@ type alias Resource recordType externalMsg =
     , update : Session -> recordType -> Cmd externalMsg
     }
 
-{-| A Resource Message
+{-|
+A message that contains the results of a request
 -}
 type ResourceMsg recordType
     = Success recordType
     | Failure RequestError
 
 
-{-| Creator for a Resource
+{-|
+Convenience function for creating a Resource
 -}
 resource : DAO recordType -> (ResourceMsg recordType -> localMsg) -> (localMsg -> externalMsg) -> Resource recordType externalMsg
 resource dao resourceToLocal localToExternal =
