@@ -16,8 +16,6 @@ Use to pass query params to a request made via a Resource or ListResource.
 -}
 
 {-| A QueryParam
-
-@docs QueryParam
 -}
 type alias QueryParam =
     { key : String

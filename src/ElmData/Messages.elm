@@ -1,9 +1,9 @@
 module ElmData.Messages exposing (RequestError(..), RequestResult, RequestResults, DAORequestResponse, ListDAORequestResponse)
 
 {-|
-    # Use to pass query params to a request made via a Resource or ListResource.
+Use to pass query params to a request made via a Resource or ListResource.
 
-    @docs RequestError, RequestResult, RequestResults, DAORequestResponse, ListDAORequestResponse
+@docs RequestError, RequestResult, RequestResults, DAORequestResponse, ListDAORequestResponse
 -}
 import Http exposing (Response)
 

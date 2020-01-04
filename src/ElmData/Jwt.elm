@@ -1,9 +1,8 @@
 module ElmData.Jwt exposing (JwtClaims, checkToken)
 
-{-|
-    Jwt module is a collection of helpers used to derive sessions from JWTs.
+{-| Jwt module is a collection of helpers used to derive sessions from JWTs.
 
-    @docs JwtClaims, checkToken
+@docs JwtClaims, checkToken
 -}
 
 import Jwt exposing (..)

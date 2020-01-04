@@ -1,11 +1,10 @@
 module ElmData.Session exposing (Session(..), SessionData, checkSessionExpiration, checkError, SessionFailure(..))
 
-{-|
-    Sessions exist to hold all state associated with your requests.
+{-| Sessions exist to hold all state associated with your requests.
 
-    Right now that's just Auth data, but I think this could also be a great place for cached data to live as well.
+Right now that's just Auth data, but I think this could also be a great place for cached data to live as well.
 
-    @docs Session, SessionData, checkSessionExpiration, checkError, SessionFailure
+@docs Session, SessionData, checkSessionExpiration, checkError, SessionFailure
 -}
 
 import Http exposing (..)
@@ -20,8 +19,7 @@ type Session
     = Unauthenticated
     | Active SessionData
 
-{-|
-    Data related to an authenticated session
+{-| Data related to an authenticated session
 -}
 type alias SessionData =
   { authToken : String

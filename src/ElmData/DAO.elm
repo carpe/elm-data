@@ -1,9 +1,8 @@
 module ElmData.DAO exposing (DAO, createDAO)
 
-{-|
-    DAOs (Data Access Objects) exist to hold all state relevant to making requests to an API.
+{-| DAOs (Data Access Objects) exist to hold all state relevant to making requests to an API.
 
-    @docs DAO, createDAO
+@docs DAO, createDAO
 -}
 
 import Json.Decode
@@ -11,8 +10,7 @@ import Json.Encode
 
 import ElmData.AuthConfig as AuthConfig exposing (AuthConfig)
 
-{-|
-    the dao
+{-| the dao
 -}
 type alias DAO recordType =
     { apiUrl : String
@@ -25,8 +23,7 @@ type alias DAO recordType =
     , serialize : (recordType -> Json.Encode.Value)
     }
 
-{-|
-    Function used to create a DAO
+{-| Function used to create a DAO
 -}
 createDAO : String -> Json.Decode.Decoder (List recordType) -> Json.Decode.Decoder recordType -> (recordType -> Json.Encode.Value) -> (DAO recordType)
 createDAO apiUrl listDeserializer deserializer serializer =
@@ -39,8 +36,7 @@ createDAO apiUrl listDeserializer deserializer serializer =
     , serialize = serializer
     }
 
-{-|
-    Function used to create a DAO
+{-| Function used to create a DAO
 -}
 createAuthenticatedDAO : String -> AuthConfig -> Json.Decode.Decoder (List recordType) -> Json.Decode.Decoder recordType -> (recordType -> Json.Encode.Value) -> (DAO recordType)
 createAuthenticatedDAO apiUrl authConfig listDeserializer deserializer serializer =
