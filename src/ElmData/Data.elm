@@ -161,17 +161,17 @@ curryPost dao returnMsg =
 
 -- Creates a function that will create and send requests to update a given record.
 --
-curryPut : DAO recordType -> (RequestResult recordType -> msg) -> Session -> recordType -> Cmd msg
+curryPut : DAO recordType -> (RequestResult recordType -> msg) -> Session -> recordType -> String -> Cmd msg
 curryPut dao returnMsg =
     let
         -- create a request handler that maps the results in order to simplify the errors.
         requestHandler result = returnMsg (mapHttpErrors result)
 
         -- this is the function that will be used to CREATE a http request based on some record's identifier
-        createRequest session recordToPersist = Http.request
+        createRequest session recordToPersist identifier = Http.request
             { method = "PUT"
             , headers = headers dao session
-            , url = dao.apiUrl
+            , url = (dao.apiUrl ++ "/" ++ identifier)
             , body = (Http.jsonBody <| dao.serialize recordToPersist)
             , expect = Http.expectStringResponse <| createResponseExpectation dao.deserialize
             , timeout = Nothing
@@ -180,7 +180,7 @@ curryPut dao returnMsg =
 
         -- this is the function that will be used to SEND an Http Request
         -- (notice how we call the method above)
-        sendRequest session recordToPersist = Http.send requestHandler <| createRequest session recordToPersist
+        sendRequest session recordToPersist identifier = Http.send requestHandler <| createRequest session recordToPersist identifier
     in
         -- put it all together to create a function that creates THEN sends a request for a given record
         sendRequest

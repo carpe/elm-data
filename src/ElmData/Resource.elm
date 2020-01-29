@@ -17,7 +17,7 @@ import ElmData.Session exposing (Session(..))
 type alias Resource recordType externalMsg =
     { create : Session -> recordType -> Cmd externalMsg
     , fetch : Session -> String -> Cmd externalMsg
-    , update : Session -> recordType -> Cmd externalMsg
+    , update : Session -> recordType -> String -> Cmd externalMsg
     }
 
 {-| A message that contains the results of a request
