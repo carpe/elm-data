@@ -3,7 +3,7 @@
     "name": "carpe/elm-data",
     "summary": "Data Persistence library for Elm applications",
     "license": "ISC",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "exposed-modules": [
         "ElmData.DAO",
         "ElmData.Resource",
