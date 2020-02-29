@@ -4,9 +4,9 @@ module ElmData.Data exposing (..)
     Main module for DAO related things.
 -}
 
-import Http exposing (Response)
+import Http exposing (Response, expectJson)
 
-import Json.Decode
+import Json.Decode exposing (null, succeed, value)
 
 import ElmData.QueryParam exposing (..)
 import ElmData.Messages exposing (..)
@@ -44,8 +44,8 @@ curryFetch dao returnMsg =
 
 -- Creates a function that will send request to delete a given record.
 --
-curryDelete : DAO recordType -> (RequestResults recordType -> msg) -> Session -> String -> Cmd msg
-curryDelete dao returnMsg =
+curryDelete : DAO recordType -> (Result RequestError msg -> msg) -> msg -> Session -> String -> Cmd msg
+curryDelete dao returnMsg callback =
     let
         -- create a request handler that maps the results in order to simplify the errors.
         requestHandler result = returnMsg (mapHttpErrors result)
@@ -60,7 +60,7 @@ curryDelete dao returnMsg =
             , headers = headers dao session
             , url = (dao.apiUrl ++ "/" ++ identifier)
             , body = Http.emptyBody
-            , expect = Http.expectStringResponse <| createEmptyResponseExpectation
+            , expect = Http.expectJson (succeed callback)
             , timeout = Nothing
             , withCredentials = False
             }
@@ -76,7 +76,7 @@ curryDelete dao returnMsg =
 -- Creates a function that will create and send requests for records based on a query.
 --
 --curryQuery : String -> String -> (DAOMsg recordType -> msg) -> Json.Decode.Decoder (List recordType) -> (List QueryParam -> Cmd msg)
-curryQuery : DAO recordType -> (RequestResults recordType -> msg) -> Session -> List QueryParam -> Cmd msg
+curryQuery : DAO recordType -> (RequestResult recordType -> msg) -> Session -> List QueryParam -> Cmd msg
 curryQuery dao returnMsg =
     let
         -- create a request handler that maps the results in order to simplify the errors.
@@ -91,7 +91,7 @@ curryQuery dao returnMsg =
             , headers = headers dao session
             , url = (createUrl dao.apiUrl queryParams)
             , body = Http.emptyBody
-            , expect = Http.expectStringResponse <| createListResponseExpectation dao.listDeserialize
+            , expect = Http.expectStringResponse <| createResponseExpectation dao.deserialize
             , timeout = Nothing
             , withCredentials = False
             }
@@ -105,7 +105,7 @@ curryQuery dao returnMsg =
 
 -- Creates a function that will create and send requests for records
 --
-curryFetchAll : DAO recordType -> (RequestResults recordType -> msg) -> Session -> Cmd msg
+curryFetchAll : DAO recordType -> (RequestResult recordType -> msg) -> Session -> Cmd msg
 curryFetchAll dao returnMsg =
     let
         -- create a request handler that maps the results in order to simplify the errors.
@@ -120,7 +120,7 @@ curryFetchAll dao returnMsg =
             , headers = headers dao session
             , url = dao.apiUrl
             , body = Http.emptyBody
-            , expect = Http.expectStringResponse <| createListResponseExpectation dao.listDeserialize
+            , expect = Http.expectStringResponse <| createResponseExpectation dao.deserialize
             , timeout = Nothing
             , withCredentials = False
             }
@@ -139,6 +139,7 @@ curryPost : DAO recordType -> (RequestResult recordType -> msg) -> Session -> re
 curryPost dao returnMsg =
     let
         -- create a request handler that maps the results in order to simplify the errors.
+        requestHandler : Result Http.Error (DAORequestResponse recordType) -> msg
         requestHandler result = returnMsg (mapHttpErrors result)
 
         -- this is the function that will be used to CREATE a http request based on some record's identifier
@@ -199,26 +200,6 @@ createResponseExpectation decoder =
             Result.map createResponse (Json.Decode.decodeString decoder response.body)
                 |> Result.mapError Json.Decode.errorToString
 
-createListResponseExpectation : Json.Decode.Decoder (List recordType) -> (Response String -> Result String (ListDAORequestResponse recordType))
-createListResponseExpectation decoder =
-    let
-        createResponse decodedResults =
-            { body = decodedResults
-            }
-    in
-        \response ->
-            Result.map createResponse (Json.Decode.decodeString decoder response.body)
-                |> Result.mapError Json.Decode.errorToString
-
-createEmptyResponseExpectation : (Response String -> Result String (ListDAORequestResponse recordType))
-createEmptyResponseExpectation =
-    let
-        createResponse =
-            { body = []
-            }
-    in
-        \response ->
-            Ok createResponse
 
 mapHttpErrors : Result Http.Error a -> Result RequestError a
 mapHttpErrors httpResult =

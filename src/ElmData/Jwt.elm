@@ -1,18 +1,20 @@
-module ElmData.Jwt exposing (JwtClaims, checkToken)
+module ElmData.Jwt exposing (JwtClaims, checkToken, scheduleExpiration)
 
 {-| Jwt module is a collection of helpers used to derive sessions from JWTs.
 
-@docs JwtClaims, checkToken
+@docs JwtClaims, checkToken, scheduleExpiration
 -}
 
+import Basics as Integer
 import Jwt exposing (..)
 
 import ElmData.Session exposing (SessionData, SessionFailure(..), checkSessionExpiration)
 
-import Task exposing (Task)
+import Process
+import Task exposing (Task, andThen)
 import Time exposing (..)
 
-import Json.Decode as Decode exposing (Decoder, Value, field)
+import Json.Decode as Decode exposing (Decoder, Value)
 import Json.Decode.Pipeline exposing (required, optional)
 
 
@@ -31,6 +33,19 @@ sessionFromClaims authToken claims =
     , expiration = claims.expiration
     , permissions = claims.permissions
     }
+
+{-| Schedule a message to be sent any number of milliseconds BEFORE the JWT expires. You can use this to remind users
+that they may need to re-login soon, or to simply expire the session.
+-}
+scheduleExpiration : SessionData -> Int -> msg -> Cmd msg
+scheduleExpiration session millisBeforeExpiration expirationMsg =
+    let
+        secondsRemainingForSession now =
+            (Time.posixToMillis now) - (session.expiration * 1000)
+    in
+        Time.now
+            |> andThen (\now -> Process.sleep <| Integer.toFloat <| secondsRemainingForSession now)
+            |> Task.perform (\_ -> expirationMsg)
 
 {-| Decoder for JwtClaims
 -}
