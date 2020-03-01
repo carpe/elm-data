@@ -4,7 +4,7 @@ module ElmData.Data exposing (..)
     Main module for DAO related things.
 -}
 
-import Http exposing (Response, expectJson)
+import Http exposing (Response, expectJson, expectStringResponse)
 
 import Json.Decode exposing (null, succeed, value)
 
@@ -60,7 +60,7 @@ curryDelete dao returnMsg callback =
             , headers = headers dao session
             , url = (dao.apiUrl ++ "/" ++ identifier)
             , body = Http.emptyBody
-            , expect = Http.expectJson (succeed callback)
+            , expect = expectStringResponse (\response -> Ok callback)
             , timeout = Nothing
             , withCredentials = False
             }
