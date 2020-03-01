@@ -40,12 +40,13 @@ that they may need to re-login soon, or to simply expire the session.
 scheduleExpiration : SessionData -> Int -> msg -> Cmd msg
 scheduleExpiration session millisBeforeExpiration expirationMsg =
     let
-        secondsRemainingForSession now =
-            (Time.posixToMillis now) - (session.expiration * 1000)
+        millisUntilExpiration now =
+            (Time.posixToMillis now + millisBeforeExpiration) - (session.expiration * 1000)
     in
         Time.now
-            |> andThen (\now -> Process.sleep <| Integer.toFloat <| secondsRemainingForSession now)
-            |> Task.perform (\_ -> expirationMsg)
+            |> andThen (\now -> Process.sleep <| Integer.toFloat <| millisUntilExpiration now)
+            |> andThen (\_ -> Task.succeed expirationMsg)
+            |> Task.perform identity
 
 {-| Decoder for JwtClaims
 -}
