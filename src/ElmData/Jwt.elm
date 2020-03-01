@@ -41,7 +41,7 @@ scheduleExpiration : SessionData -> Int -> msg -> Cmd msg
 scheduleExpiration session millisBeforeExpiration expirationMsg =
     let
         millisUntilExpiration now =
-            (Time.posixToMillis now + millisBeforeExpiration) - (session.expiration * 1000)
+            (session.expiration * 1000) - (Time.posixToMillis now + millisBeforeExpiration)
     in
         Time.now
             |> andThen (\now -> Process.sleep <| Integer.toFloat <| millisUntilExpiration now)
