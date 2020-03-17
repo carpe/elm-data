@@ -14,7 +14,7 @@ Use to pass query params to a request made via a Resource or ListResource.
 @docs createUrl
 -}
 
-import Url.Builder as Builder exposing (absolute)
+import Url.Builder as Builder exposing (relative)
 
 
 {-| A QueryParam
@@ -37,7 +37,7 @@ createUrl baseUrl queryParameters =
                 baseUrl
 
             _ ->
-                absolute [ baseUrl ] formattedQueryParams
+                relative [ baseUrl ] formattedQueryParams
 
 
 {-| Create String QueryParam
