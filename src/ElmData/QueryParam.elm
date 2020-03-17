@@ -17,6 +17,7 @@ Use to pass query params to a request made via a Resource or ListResource.
 
 {-| A QueryParam
 -}
+import Url.Builder as Builder exposing (absolute)
 type alias QueryParam =
     { key : String
     , value : String
@@ -28,14 +29,14 @@ createUrl : String -> List QueryParam -> String
 createUrl baseUrl queryParameters =
     let
         -- put the query parameters together and encode them
-        formattedQueryParams = List.map (\qp -> qp.key ++ "=" ++ qp.value) queryParameters
+        formattedQueryParams = List.map (\qp -> Builder.string qp.key qp.value ) queryParameters
     in
         case queryParameters of
             [] ->
                 baseUrl
 
             _ ->
-                baseUrl ++ "?" ++ String.join "&" formattedQueryParams
+                absolute [ baseUrl ] formattedQueryParams
 
 
 {-| Create String QueryParam

@@ -3,7 +3,7 @@
     "name": "carpe/elm-data",
     "summary": "Data Persistence library for Elm applications",
     "license": "ISC",
-    "version": "4.0.3",
+    "version": "4.0.4",
     "exposed-modules": [
         "ElmData.DAO",
         "ElmData.Resource",
@@ -20,6 +20,7 @@
         "elm/http": "1.0.0 <= v < 2.0.0",
         "elm/json": "1.0.0 <= v < 2.0.0",
         "elm/time": "1.0.0 <= v < 2.0.0",
+        "elm/url": "1.0.0 <= v < 2.0.0",
         "simonh1000/elm-jwt": "6.0.0 <= v < 7.0.0"
     },
     "test-dependencies": {}
