@@ -1,6 +1,5 @@
 module ElmData.QueryParam exposing (QueryParam, createUrl, string, int, float, bool)
 
-
 {-|
 Use to pass query params to a request made via a Resource or ListResource.
 
@@ -15,9 +14,11 @@ Use to pass query params to a request made via a Resource or ListResource.
 @docs createUrl
 -}
 
+import Url.Builder as Builder exposing (absolute)
+
+
 {-| A QueryParam
 -}
-import Url.Builder as Builder exposing (absolute)
 type alias QueryParam =
     { key : String
     , value : String
